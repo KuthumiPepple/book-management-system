@@ -31,3 +31,8 @@ func GetBookById(id int64) (*Book, *gorm.DB) {
 	db := db.Where("id = ?", id).Find(&b)
 	return &b, db
 }
+
+func (b *Book) CreateBook() *Book{
+	db.Create(b)
+	return b
+}

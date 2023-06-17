@@ -7,9 +7,22 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/kuthumipepple/book-management-system/pkg/models"
+	"github.com/kuthumipepple/book-management-system/pkg/utils"
 )
 
-func CreateBook(w http.ResponseWriter, r *http.Request) {}
+func CreateBook(w http.ResponseWriter, r *http.Request) {
+	newBook := &models.Book{}
+	err := utils.ParseBody(r, newBook)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	b := newBook.CreateBook()
+	res, _ := json.Marshal(b)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(res)
+}
 
 func GetBooks(w http.ResponseWriter, r *http.Request) {
 	books := models.GetAllBooks()
