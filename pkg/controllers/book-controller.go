@@ -44,4 +44,15 @@ func GetBookById(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 func UpdateBook(w http.ResponseWriter, r *http.Request) {}
-func DeleteBook(w http.ResponseWriter, r *http.Request) {}
+func DeleteBook(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	id, err := strconv.ParseInt(params["bookId"], 0, 0)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	book := models.DeleteBook(id)
+	res, _ := json.Marshal(book)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(res)
+}
