@@ -7,21 +7,27 @@ import (
 
 var db *gorm.DB
 
-type Book struct{
+type Book struct {
 	gorm.Model
-	Name string `gorm:"" json:"name"`
-	Author string `json:"author"`
+	Name        string `gorm:"" json:"name"`
+	Author      string `json:"author"`
 	Publication string `json:"publication"`
 }
 
-func init(){
+func init() {
 	config.Connect()
 	db = config.GetDB()
 	db.AutoMigrate(&Book{})
 }
 
-func GetAllBooks() []Book{
+func GetAllBooks() []Book {
 	var books []Book
 	db.Find(&books)
 	return books
+}
+
+func GetBookById(id int64) (*Book, *gorm.DB) {
+	var b Book
+	db := db.Where("id = ?", id).Find(&b)
+	return &b, db
 }
