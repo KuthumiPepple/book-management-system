@@ -43,7 +43,36 @@ func GetBookById(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 }
-func UpdateBook(w http.ResponseWriter, r *http.Request) {}
+func UpdateBook(w http.ResponseWriter, r *http.Request) {
+	bookUpdate := &models.Book{}
+	if err := utils.ParseBody(r, bookUpdate); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	params := mux.Vars(r)
+	id, err := strconv.ParseInt(params["bookId"], 0, 0)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	bookPtr, db := models.GetBookById(id)
+	if bookUpdate.Name != "" {
+		bookPtr.Name = bookUpdate.Name
+	}
+	if bookUpdate.Author != "" {
+		bookPtr.Author = bookUpdate.Author
+	}
+	if bookUpdate.Publication != "" {
+		bookPtr.Publication = bookUpdate.Publication
+	}
+	db.Save(bookPtr)
+
+	res, _ := json.Marshal(bookPtr)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(res)
+}
 func DeleteBook(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id, err := strconv.ParseInt(params["bookId"], 0, 0)
