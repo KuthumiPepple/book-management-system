@@ -9,7 +9,7 @@ The following are required to run the application:
 ## Getting Started
 To run the application:
 1. Clone this repository
-2. Run `go mod tidy` command to download all the dependencies.
+2. Run `go mod download` command to download all the dependencies.
 3. Create a MySQL database.
 4. Edit the connection string "dsn" in the Connect() function in the `config` package to match your database details.
 5. Run `go run main.go` command to start the application.
